@@ -15,6 +15,8 @@ class _HomeState extends State<Home> {
   TextEditingController pesoController = TextEditingController();
   TextEditingController alturaController = TextEditingController();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String info = "Informe seus dados!";
 
   void _calc() {
@@ -68,13 +70,15 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
+            child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Icon(Icons.person_outline, size: 110, color: Colors.black54),
               Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: TextField(
+                child: TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Peso (kg)",
@@ -82,11 +86,16 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black45, fontSize: 20),
                   controller: pesoController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Insira seu peso!";
+                    }
+                  },
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
-                child: TextField(
+                child: TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Altura (cm)",
@@ -94,6 +103,11 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black45, fontSize: 20),
                   controller: alturaController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Insira sua altura!";
+                    }
+                  },
                 ),
               ),
               Padding(
@@ -101,7 +115,11 @@ class _HomeState extends State<Home> {
                   child: Container(
                     height: 45,
                     child: RaisedButton(
-                      onPressed: _calc,
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _calc;
+                        }
+                      },
                       child: Text("Calcular",
                           style: TextStyle(color: Colors.white, fontSize: 15)),
                       color: Colors.black45,
@@ -115,6 +133,6 @@ class _HomeState extends State<Home> {
                       fontWeight: FontWeight.bold))
             ],
           ),
-        ));
+        )));
   }
 }
